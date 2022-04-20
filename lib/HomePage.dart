@@ -25,12 +25,11 @@ class _HomePageState extends State<HomePage> {
         .collection("location")
         .get()
         .then((QuerySnapshot q) {
-          q.docs.forEach((el) {
-            initMarker(el["name"], el["longitute"], el["latitude"]);
-          });
+      q.docs.forEach((el) {
+        initMarker(el["name"], el["longitute"], el["latitude"]);
+      });
     });
   }
-
 
   Marker _marker;
   Timer _timer;
@@ -47,8 +46,8 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         location.getLocation().then((p) {
           _marker = Marker(
-              point: myLat.LatLng(p.latitude, p.longitude),
-              builder: (ctx) => Container(
+            point: myLat.LatLng(p.latitude, p.longitude),
+            builder: (ctx) => Container(
                 child: Center(
                   child: Column(
                     children: [
@@ -61,14 +60,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                 )
 
-              ),
+            ),
           );
+
         });
       });
     });
-    if (markers.length==null) {
-      markers.add(_marker);
-    }
+
 
   }
 
@@ -108,29 +106,29 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: new AppBar(title: new Text("Карта")),
         body : FlutterMap(
-            children: <Widget>[
-              Container(
-                child: RaisedButton(
-                  child: Text("Рассчитать"),
-                ),
-              )
-            ],
-            options: MapOptions(
-              center: _marker.point,
-              zoom: 15.0,
+          children: <Widget>[
+            Container(
+              child: RaisedButton(
+                child: Text("Рассчитать"),
+              ),
+            )
+          ],
+          options: MapOptions(
+            center: _marker.point,
+            zoom: 15.0,
+          ),
+          layers: [
+            TileLayerOptions(
+                urlTemplate: "https://api.mapbox.com/styles/v1/aleshina/cl235m6jv000414o3ps4ulujl/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYWxlc2hpbmEiLCJhIjoiY2wyMzVkOWJiMDNvcTNjbzAzbmt2OGFnMCJ9.ZfGMndD5jOX91MgRzI3nXA",
+                additionalOptions: {
+                  'accessToken' : 'pk.eyJ1IjoiYWxlc2hpbmEiLCJhIjoiY2wyMzVkOWJiMDNvcTNjbzAzbmt2OGFnMCJ9.ZfGMndD5jOX91MgRzI3nXA',
+                }
             ),
-            layers: [
-              TileLayerOptions(
-                  urlTemplate: "https://api.mapbox.com/styles/v1/aleshina/cl235m6jv000414o3ps4ulujl/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYWxlc2hpbmEiLCJhIjoiY2wyMzVkOWJiMDNvcTNjbzAzbmt2OGFnMCJ9.ZfGMndD5jOX91MgRzI3nXA",
-                  additionalOptions: {
-                    'accessToken' : 'pk.eyJ1IjoiYWxlc2hpbmEiLCJhIjoiY2wyMzVkOWJiMDNvcTNjbzAzbmt2OGFnMCJ9.ZfGMndD5jOX91MgRzI3nXA',
-                  }
-              ),
-              MarkerLayerOptions(
-                  markers: markers
-              ),
-            ],
-          )
+            MarkerLayerOptions(
+                markers: markers
+            ),
+          ],
+        )
     );
   }
 
