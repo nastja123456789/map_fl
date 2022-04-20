@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "413791677023",
+    "project_id": "mapflutter-7b17c",
+    "storage_bucket": "mapflutter-7b17c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413791677023:android:07526736c4ba3a97a109ea",
+        "android_client_info": {
+          "package_name": "com.example.map_fl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413791677023-s4qtq2s4l4fno5geme50fk6ikf2um9ks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.map_fl",
+            "certificate_hash": "94e80f0a49669a88382776efd23414623ad0730d"
+          }
+        },
+        {
+          "client_id": "413791677023-iev6f7ugl940hhpfhbov956nnqg8h4vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqwAug2FmQvaRe2eDgVK65YSGPzDK4gkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413791677023-iev6f7ugl940hhpfhbov956nnqg8h4vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
