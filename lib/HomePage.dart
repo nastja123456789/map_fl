@@ -19,14 +19,14 @@ class _HomePageState extends State<HomePage> {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  getLocation() {
-
+  updateMarkers() {
+    markers.clear();
     firestore
         .collection("location")
         .get()
         .then((QuerySnapshot q) {
       q.docs.forEach((el) {
-        initMarker(el["name"], el["longitute"], el["latitude"]);
+        initMarker(el["latitude"], el["longitude"], el["name"]);
       });
     });
   }
@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
 
     markers = <Marker>[];
+    updateMarkers();
     super.initState();
     _timer = Timer.periodic(Duration(seconds: 1), (_) {
       setState(() {
@@ -62,11 +63,9 @@ class _HomePageState extends State<HomePage> {
 
             ),
           );
-
         });
       });
     });
-
 
   }
 
