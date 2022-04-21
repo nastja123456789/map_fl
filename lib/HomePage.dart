@@ -57,22 +57,22 @@ class _HomePageState extends State<HomePage> {
         location.getLocation().then((p) {
           _marker = Marker(
             point: myLat.LatLng(p.latitude, p.longitude),
-            builder: (ctx) => Container(
-                child: Center(
-                  child: Column(
-                    children: [
-                      // RaisedButton(
-                      //   child: Text("$res and nothing",style: TextStyle(fontSize: 40),),
-                      //     onPressed: _distanceInMeters
-                      // ),
-                      Icon(Icons.location_on, size: 40,),
-                    ],
-                  ),
-                )
-
-            ),
+            builder: (ctx) =>
+                Container(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          // RaisedButton(
+                          //   child: Text("$res and nothing",style: TextStyle(fontSize: 40),),
+                          //     onPressed: _distanceInMeters
+                          // ),
+                          Icon(Icons.location_on, size: 40,),
+                        ],
+                      ),
+                    )
+                ),
           );
-        });
+        }
       });
     });
 
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Enter Distance'),
+            title: Text('Enter Distance in meters'),
             contentPadding: EdgeInsets.all(10.0),
             content: TextField(
               decoration: InputDecoration(hintText: 'Enter distance'),
@@ -184,15 +184,16 @@ class _HomePageState extends State<HomePage> {
   filterMarkers(dist) {
     markers.clear();
     for(int i=0;i<k.length;++i) {
-      Geolocator.distanceBetween(
-          _marker.point.latitude,
-          _marker.point.longitude,
+      CalDist = Geolocator.distanceBetween(
+          55.677,
+          37.761,
           k[i],
           v[i]);
-      if (CalDist/1000 < double.parse(dist)) {
-        for (int i=0;i<k.length;++i) {
+      print(CalDist.floorToDouble());
+      print(double.parse(dist));
+      //CalDist=1000;
+      if (CalDist < double.parse(dist)) {
           placeFilterMarker(k[i], v[i], CalDist/1000);
-        }
       }
     }
   }
