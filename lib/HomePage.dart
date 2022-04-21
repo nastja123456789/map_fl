@@ -15,9 +15,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-
-
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  MapController controller;
+  Set<Marker> mark = new Set();
 
   updateMarkers() {
     markers.clear();
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
         .get()
         .then((QuerySnapshot q) {
       q.docs.forEach((el) {
-        initMarker(el["latitude"], el["longitude"], el["name"]);
+        initMarker(el["latitude"], el["longitude"]);
       });
     });
   }
@@ -75,9 +76,8 @@ class _HomePageState extends State<HomePage> {
     _timer.cancel();
   }
 
-  void initMarker(name, long, lat) async{
+  void initMarker(lat, long) async{
     myLat.LatLng latLng = myLat.LatLng(lat, long);
-    var markName = name;
     Marker marker = Marker(
       point: latLng,
       builder: (context) => new Container(
@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: new AppBar(title: new Text("Карта")),
         body : FlutterMap(
+          mapController: controller,
           children: <Widget>[
             Container(
               child: RaisedButton(
@@ -115,6 +116,9 @@ class _HomePageState extends State<HomePage> {
           options: MapOptions(
             center: _marker.point,
             zoom: 15.0,
+            onMapCreated: (MapController controller) {
+
+            }
           ),
           layers: [
             TileLayerOptions(
@@ -124,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                 }
             ),
             MarkerLayerOptions(
-                markers: markers
+                markers: markers,
             ),
           ],
         )
