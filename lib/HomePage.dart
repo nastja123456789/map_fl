@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' as myLat;
 import 'package:location/location.dart';
 
@@ -19,6 +20,10 @@ class _HomePageState extends State<HomePage> {
 
   MapController controller;
   Set<Marker> mark = new Set();
+  var filterdist;
+  List<double> mass=[];
+  List<double> v=[];
+  List<double> k=[];
 
   updateMarkers() {
     markers.clear();
@@ -28,6 +33,8 @@ class _HomePageState extends State<HomePage> {
         .then((QuerySnapshot q) {
       q.docs.forEach((el) {
         initMarker(el["latitude"], el["longitude"]);
+        v.add(el["longitude"]);
+        k.add(el["latitude"]);
       });
     });
   }
@@ -37,6 +44,7 @@ class _HomePageState extends State<HomePage> {
   int _markerIndex = 0;
   Location location = Location();
   List<Marker> markers;
+  var CalDist;
 
   @override
   void initState() {
@@ -98,12 +106,21 @@ class _HomePageState extends State<HomePage> {
   }
 
 
+
   Widget build(BuildContext context) {
     if (_marker == null) {
       return new Container();
     }
     return Scaffold(
-        appBar: new AppBar(title: new Text("Карта")),
+        appBar: new AppBar(
+            title: new Text("Карта"),
+          actions: <Widget>[
+            IconButton(
+              onPressed: getDistance,
+              icon: Icon(Icons.filter_list),
+            ),
+          ],
+        ),
         body : FlutterMap(
           mapController: controller,
           children: <Widget>[
@@ -135,6 +152,71 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<bool> getDistance() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Enter Distance'),
+            contentPadding: EdgeInsets.all(10.0),
+            content: TextField(
+              decoration: InputDecoration(hintText: 'Enter distance'),
+              onChanged: (val) {
+                setState(() {
+                  filterdist = val;
+                });
+              },
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    filterMarkers(filterdist);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                textColor: Colors.blue,
+          )
+            ],
+          );
+        }
+    );
+  }
+  filterMarkers(dist) {
+    markers.clear();
+    for(int i=0;i<k.length;++i) {
+      Geolocator.distanceBetween(
+          _marker.point.latitude,
+          _marker.point.longitude,
+          k[i],
+          v[i]);
+      if (CalDist/1000 < double.parse(dist)) {
+        for (int i=0;i<k.length;++i) {
+          placeFilterMarker(k[i], v[i], CalDist/1000);
+        }
+      }
+    }
+  }
+
+  placeFilterMarker(lat, long, distance) {
+    myLat.LatLng latLng = myLat.LatLng(lat, long);
+    Marker marker = Marker(
+      point: latLng,
+      builder: (context) => new Container(
+        child: IconButton(
+          icon: Icon(Icons.location_on),
+          color: Colors.red,
+          iconSize: 45.0,
+          onPressed: () {
+            print('Marker');
+          },
+        ),
+      ),
+    );
+    setState(() {
+      markers.add(marker);
+      print(marker.point);
+    });
+  }
 
 }
 
